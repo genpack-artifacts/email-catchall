@@ -1,0 +1,27 @@
+{
+    profile:"weston/paravirt",
+    circulardep_breaker: {
+        packages: [ "media-libs/freetype", "media-libs/harfbuzz" ],
+        use: "-truetype -harfbuzz"
+    },
+    packages: [
+        "mail-mta/postfix",
+        "net-mail/dovecot",
+
+        "mail-client/evolution", // email client
+        "app-editors/gnome-text-editor", // text editor
+        "net-analyzer/wireshark", // network analyzer with pcap support
+    ],
+    users: [
+        {
+            name: "user",
+            uid: 1000,
+            additional_groups: [ "wheel", "pcap" ],
+            empty_password: true,
+        }
+    ],
+    "services": [
+        "postfix",
+        "dovecot",
+    ],
+}
