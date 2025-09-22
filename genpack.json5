@@ -5,8 +5,7 @@
         use: "-truetype -harfbuzz"
     },
     packages: [
-        "mail-mta/postfix",
-        "net-mail/dovecot",
+        "net-mail/catchall", // see overlay subdirectory
 
         "mail-client/evolution", // email client
         "app-editors/gnome-text-editor", // text editor
@@ -19,9 +18,5 @@
             additional_groups: [ "wheel", "pcap" ],
             empty_password: true,
         }
-    ],
-    "services": [
-        "postfix",
-        "dovecot",
     ],
 }

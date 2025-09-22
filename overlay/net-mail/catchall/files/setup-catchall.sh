@@ -1,3 +1,4 @@
+#!/bin/sh
 set -e
 
 # postfix
@@ -28,3 +29,5 @@ userdb {
 }
 EOS
 rm /etc/dovecot/conf.d/10-ssl.conf
+
+systemctl enable postfix dovecot
