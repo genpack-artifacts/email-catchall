@@ -13,6 +13,9 @@ sed -i 's/^mail:\(.*\)/#mail:\1/' /etc/mail/aliases
 newaliases
 
 # dovecot
+sed -i 's/^mail_home =\(.*\)/#mail_home =\1/' /etc/dovecot/dovecot.conf
+sed -i 's/^mail_driver =.*/mail_driver = maildir/' /etc/dovecot/dovecot.conf
+sed -i 's/^mail_path =.*/mail_path = ~\/.maildir/' /etc/dovecot/dovecot.conf
 sed -i 's/^#first_valid_uid =.*/first_valid_uid = 0/' /etc/dovecot/dovecot.conf
 sed -i 's/^  cert_file =\(.*\)/# cert_file =\1/' /etc/dovecot/dovecot.conf
 sed -i 's/^  key_file =\(.*\)/# key_file =\1/' /etc/dovecot/dovecot.conf
