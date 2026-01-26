@@ -13,21 +13,24 @@ sed -i 's/^mail:\(.*\)/#mail:\1/' /etc/mail/aliases
 newaliases
 
 # dovecot
-sed -i 's/^#first_valid_uid =.*/first_valid_uid = 0/' /etc/dovecot/conf.d/10-mail.conf
-sed -i 's/^#disable_plaintext_auth = .*/disable_plaintext_auth = no/' /etc/dovecot/conf.d/10-auth.conf
-sed -i 's/^!include auth-/#!include auth-/' /etc/dovecot/conf.d/10-auth.conf
-echo '!include auth-catchall.conf.ext' >> /etc/dovecot/conf.d/10-auth.conf
-cat << 'EOS' > /etc/dovecot/conf.d/auth-catchall.conf.ext
-passdb {
-  driver = static
-  args = nopassword=y
+sed -i 's/^#first_valid_uid =.*/first_valid_uid = 0/' /etc/dovecot/dovecot.conf
+sed -i 's/^  cert_file =\(.*\)/# cert_file =\1/' /etc/dovecot/dovecot.conf
+sed -i 's/^  key_file =\(.*\)/# key_file =\1/' /etc/dovecot/dovecot.conf
+echo 'auth_allow_cleartext = yes' >> /etc/dovecot/dovecot.conf
+cat << 'EOS' > /etc/dovecot/conf.d/auth-catchall.conf
+passdb static {
+  fields {
+    nopassword = yes
+  }
 }
 
-userdb {
-  driver = static
-  args = uid=mail gid=mail home=/var/spool/mail
+userdb static {
+  fields {
+    uid = mail
+    gid = mail
+    home = /var/spool/mail
+  }
 }
 EOS
-rm /etc/dovecot/conf.d/10-ssl.conf
 
 systemctl enable postfix dovecot
