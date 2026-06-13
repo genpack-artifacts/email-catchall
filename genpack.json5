@@ -1,15 +1,41 @@
 {
-    profile:"weston/paravirt",
-    circulardep_breaker: {
-        packages: [ "media-libs/freetype", "media-libs/harfbuzz" ],
-        use: "-truetype -harfbuzz"
-    },
+    profile: "paravirt",
     packages: [
-        "net-mail/catchall", // see overlay subdirectory
+        // ref: email-catchall/genpack.json5
+        "mail-mta/postfix",
+        "net-mail/dovecot",
 
-        "mail-client/evolution", // email client
-        "app-editors/gnome-text-editor", // text editor
-        "net-analyzer/wireshark", // network analyzer with pcap support
+        "genpack/devlauncher", // ref: dev-waypipe/genpack.json5
+
+        "mail-client/evolution",
+        "net-analyzer/wireshark",
+    ],
+    use: {
+        // ref: dev-waypipe/genpack.json5
+        "media-libs/mesa": "wayland vulkan VIDEO_CARDS: virgl zink",
+        "x11-libs/gtk+": "wayland",
+        "gui-libs/gtk": "wayland",
+        "dev-qt/qtbase": "-X wayland opengl",
+        "dev-qt/qtmultimedia": "-X opengl",
+        "dev-libs/glib": "dbus",
+        "net-libs/webkit-gtk": "wayland",
+        "sys-libs/minizip-ng": "compat", // for wireshark
+        "gui-apps/waypipe": "lz4 zstd",
+        "media-libs/freetype": "harfbuzz",
+        "app-crypt/gcr": "gtk",
+        "media-libs/libglvnd": "X",
+        "x11-libs/cairo": "X",
+    },
+    license: {
+        // ref: dev-waypipe/genpack.json5
+        "www-client/google-chrome": "google-chrome",
+        "dev-util/claude-code": "all-rights-reserved",
+        "app-editors/vscode": "Microsoft-vscode",
+    },
+    services: [
+        // ref: email-catchall/genpack.json5
+        "postfix",
+        "dovecot",
     ],
     users: [
         {

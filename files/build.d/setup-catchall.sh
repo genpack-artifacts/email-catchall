@@ -1,16 +1,18 @@
 #!/bin/sh
+# ref: email-catchall/files/build.d/setup-catchall.sh
 set -e
 
-# postfix
-echo '/.*@.*/ mail' > /etc/postfix/virtual
-echo "virtual_alias_maps = pcre:/etc/postfix/virtual" >> /etc/postfix/main.cf
-postmap /etc/postfix/virtual
-echo '// .' > /etc/postfix/any_destination
-echo "mydestination = pcre:/etc/postfix/any_destination" >> /etc/postfix/main.cf
-postmap /etc/postfix/any_destination
-sed -i 's/^inet_protocols = .*/inet_protocols = all/' /etc/postfix/main.cf
+require-installed mail-mta/postfix
+require-installed net-mail/dovecot
+
+# postfix (Postfix 3.7+ inline PCRE、postmap不要)
+postconf -e 'virtual_alias_maps = pcre:{ { /.*@.*/ mail } }'
+postconf -e 'virtual_alias_domains ='
+postconf -e 'mydestination = static:anything'
+postconf -e 'local_recipient_maps = static:anything'
+postconf -e 'inet_protocols = all'
+postconf -e 'myhostname = localhost'
 sed -i 's/^mail:\(.*\)/#mail:\1/' /etc/mail/aliases
-newaliases
 
 # dovecot
 sed -i 's/^mail_home =\(.*\)/#mail_home =\1/' /etc/dovecot/dovecot.conf
@@ -35,5 +37,3 @@ userdb static {
   }
 }
 EOS
-
-systemctl enable postfix dovecot
